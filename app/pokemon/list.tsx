@@ -36,21 +36,21 @@ const PokemonList: React.FC = () => {
             pokemon.name.toLowerCase().includes(search.toLowerCase())
         );
         setFilteredPokemons(filtered);
-        setPage(1); // Reset page on new search
+        setPage(1);
     }, [search, pokemons]);
 
     const displayedPokemons = filteredPokemons.slice((page - 1) * itemsPerPage, page * itemsPerPage);
     const showPagination = filteredPokemons.length > itemsPerPage;
 
     return (
-        <div style={{ maxWidth: "1200px", minHeight: "300px" }}>
-            <h1 className="h1 mt-10 mb-5">Pokémon List</h1>
+        <div style={{ maxWidth: "1200px", minHeight: "300px", display: "flex", flexDirection: "column", alignItems: "center", margin: "0 auto" }}>
+            <h1 className="text-2xl mt-10 mb-5">Pokémon List</h1>
             <input
                 type="text"
                 placeholder="Search Pokémon..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="p-2 mb-5 border rounded w-full max-w-md focus:outline-none focus:ring focus:border-blue-300 input dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                className="p-2 mb-20 border rounded w-full max-w-md focus:outline-none focus:ring focus:border-blue-300 input dark:bg-gray-800 dark:border-gray-700 dark:text-white"
             />
             {loading ? (
                 <p>Loading...</p>
