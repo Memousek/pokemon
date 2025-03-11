@@ -39,8 +39,22 @@ const PokemonList: React.FC = () => {
         setPage(1);
     }, [search, pokemons]);
 
+    const totalPages = Math.ceil(filteredPokemons.length / itemsPerPage);
     const displayedPokemons = filteredPokemons.slice((page - 1) * itemsPerPage, page * itemsPerPage);
-    const showPagination = filteredPokemons.length > itemsPerPage;
+
+    const generatePageNumbers = () => {
+        const pages: (number | string)[] = [];
+        if (totalPages <= 7) {
+            for (let i = 1; i <= totalPages; i++) pages.push(i);
+        } else {
+            if (page > 3) pages.push(1, "...");
+            for (let i = Math.max(1, page - 2); i <= Math.min(totalPages, page + 2); i++) {
+                pages.push(i);
+            }
+            if (page < totalPages - 2) pages.push("...", totalPages);
+        }
+        return pages;
+    };
 
     return (
         <div style={{ maxWidth: "1200px", minHeight: "300px", display: "flex", flexDirection: "column", alignItems: "center", margin: "0 auto" }}>
@@ -72,8 +86,8 @@ const PokemonList: React.FC = () => {
                             </li>
                         ))}
                     </ul>
-                    {showPagination && (
-                        <div className="justify-center flex" style={{ gap: "1rem" }}>
+                    {totalPages > 1 && (
+                        <div className="justify-center flex items-center" style={{ gap: "1rem" }}>
                             <button
                                 className="bg-blue-700 p-2.5 rounded-lg"
                                 onClick={() => setPage(page - 1)}
@@ -81,10 +95,20 @@ const PokemonList: React.FC = () => {
                             >
                                 Previous
                             </button>
+                            {generatePageNumbers().map((p, index) => (
+                                <button
+                                    key={index}
+                                    className={`p-2.5 rounded-lg ${p === page ? "bg-blue-900 text-white" : ""}`}
+                                    onClick={() => typeof p === "number" && setPage(p)}
+                                    disabled={p === "..."}
+                                >
+                                    {p}
+                                </button>
+                            ))}
                             <button
                                 className="bg-blue-700 p-2.5 rounded-lg"
                                 onClick={() => setPage(page + 1)}
-                                disabled={page * itemsPerPage >= filteredPokemons.length}
+                                disabled={page === totalPages}
                             >
                                 Next
                             </button>
